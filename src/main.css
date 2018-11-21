@@ -1,5 +1,7 @@
 body {
-    line-height: 2;
+    background-color: black;
 }
 
-#mapid { height: 500px; }
+#mapid { 
+    height: 500px; 
+}
