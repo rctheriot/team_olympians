@@ -2,24 +2,83 @@
 <html lang="en">
 
 <head>
-    <meta charset="utf-8">
-    <title>webpack 4 quickstart</title>
+  <meta charset="utf-8">
+  <title>Team Olympians</title>
 </head>
 
 <body>
-    <div id="mapid"></div>
-    <div class="container">
-        <div class="row">
-            <div class="col">Column</div>
-            <div class="col">Column</div>
-            <div class="w-100"></div>
-            <div class="col">Column</div>
-            <div class="col">Column</div>
+
+  <img id="logo" src="./assets/olympic_logo.svg"><img>
+
+  <div class="pure-g" style=" text-align:center">
+    <div class="pure-u-1-1">
+      <h1 id="title">Team Olympians</h1>
+    </div>
+  </div>
+
+  <div class="pure-g" style="text-align: center;">
+    <div class="pure-u-1-5">
+      <div class="pure-g" style="text-align: center;">
+        <div class="pure-u-1-1">
+          <h2>ToolBar 1</h2>
         </div>
+        <div class="pure-u-1-1" style="height: 900px;">
+        </div>
+        <div class="pure-u-1-1">
+          <button class="pure-button pure-button-primary" value="Swimming" onclick="sportChange(value)">Swimming</button>
+          <button class="pure-button pure-button-primary" value="Basketball" onclick="sportChange(value)">Basketball</button>
+          <button class="pure-button pure-button-primary" value="Judo" onclick="sportChange(value)">Judo</button>
+          <button class="pure-button pure-button-primary" value="Badminton" onclick="sportChange(value)">Badminton</button>
+          <button class="pure-button pure-button-primary" value="Sailing" onclick="sportChange(value)">Sailing</button>
+          <button class="pure-button pure-button-primary" value="All" onclick="sportChange(value)">All Events</button>
+
+          <input type="range" step="4" min="1960" max="2016" value="2016" class="slider" id="myRange" oninput="yearChange(value)">
+        </div>
+      </div>
+
+
     </div>
 
+    <div class="pure-u-3-5">
+      <div class="pure-g" style="text-align: center;">
+        <div class="pure-u-1-1">
+          <div id="mymap"></div>
+        </div>
+      </div>
+      <div class="pure-g" style="text-align: center;">
+        <div class="pure-u-1-1">
+          <div id="colorLegend"></div>
+        </div>
+      </div>
 
+    </div>
+    <div class="pure-u-1-5">
+      <div class="pure-g" style="text-align: center;">
+        <div class="pure-u-1-1">
+          <h2>Medal Table</h2>
+        </div>
+        <div class="pure-u-1-1">
+          <table class="pure-table pure-table-horizontal" style="width: 90%; margin: 10px;">
+            <thead>
+              <tr>
+                <th onclick="changeSortSelection('name');">Country</th>
+                <th onclick="changeSortSelection('gold');">Gold</th>
+                <th onclick="changeSortSelection('silver');">Silver</th>
+                <th onclick="changeSortSelection('bronze');">Bronze</th>
+                <th onclick="changeSortSelection('total');">Total</th>
+              </tr>
+            </thead>
+
+            <tbody id="countryMedals">
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+
+    </div>
+
+  </div>
 
 </body>
-
 </html>

@@ -31,6 +31,15 @@ module.exports = {
             name: 'img/[name]_[hash:7].[ext]',
           }
         }]
+      },
+      {
+        test: /\.(txt|csv)$/,
+        use: [
+          {
+            loader: 'file-loader',
+            options: {}
+          }
+        ]
       }
     ]
   },
