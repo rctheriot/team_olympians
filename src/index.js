@@ -1,40 +1,102 @@
-import style from "./main.css";
-import L from 'leaflet';
-import 'leaflet/dist/leaflet.css';
-import Plotly from 'plotly.js-dist';
+import "./main.css";
+import "./css/map.css";
+import 'purecss';
+import * as map from './js/map';
+import * as db from './js/database';
+import * as table from './js/table';
 
-const arr = [1, 2, 3];
-const iAmJavascriptES6 = () => console.log(...arr);
-window.iAmJavascriptES6 = iAmJavascriptES6;
+const titleDiv = document.getElementById('title');
 
-var mymap = L.map('mapid').setView([21.3069, -157.8583], 15);
+const athleteCSV = require("./assets/athlete_events.csv");
+db.loadCSVIntoDatabase(athleteCSV, 'athletes');
 
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-	maxZoom: 19,
-	attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-}).addTo(mymap);
+const countryCodes = require("./assets/countrycodes.csv");
+db.loadCSVIntoDatabase(countryCodes, 'countryCodes');
 
-var trace1 = {
-	x: [1, 2, 3, 4],
-	y: [10, 15, 13, 17],
-	mode: 'markers',
-	type: 'scatter'
-  };
-  
-  var trace2 = {
-	x: [2, 3, 4, 5],
-	y: [16, 5, 11, 9],
-	mode: 'lines',
-	type: 'scatter'
-  };
-  
-  var trace3 = {
-	x: [1, 2, 3, 4],
-	y: [12, 9, 15, 12],
-	mode: 'lines+markers',
-	type: 'scatter'
-  };
-  
-  var data = [trace1, trace2, trace3];
-  
-  Plotly.newPlot('chart', data);
+let year = '2016';
+let sex = 'M';
+let sport = 'Swimming';
+let season = 'Winter';
+
+setTitle();
+
+// map.plotMap([]);
+
+function setTitle() {
+  titleDiv.innerText = `${year} ${season} Olympics - ${(sex == 'M') ? 'Male' : 'Female'} ${sport}`;
+}
+
+window.sportChange = (selSport) => {
+  sport = selSport;
+  setTitle();
+  query();
+}
+
+window.yearChange = (selYear) => {
+  year = selYear;
+  setTitle();
+  query();
+}
+
+window.changeSortSelection = (selSort) => {
+  table.changeSortSelection(selSort, document.getElementById('countryMedals'));
+}
+
+function query() {
+  const data = {};
+  const query = { Year: year };
+  if (sport == 'All') delete query['Sport'];
+  delete query['Sex']
+  db.getDatabase('athletes')(query).each(el => {
+    const country = el['NOC'];
+    const event = el['Event'];
+    const medal = el['Medal'];
+
+    if (medal != 'NA') {
+      const countryInfo = db.getDatabase('countryCodes')({ NOC: country }).get()[0];
+      if (countryInfo) {
+        if (!data[countryInfo.Name]) {
+          data[countryInfo.Name] = {
+            'name': countryInfo.Name,
+            'noc': countryInfo.NOC,
+            'code': countryInfo.Code,
+            'gold': 0,
+            'silver': 0,
+            'bronze': 0,
+            'total': 0,
+            'events': []
+          }
+        }
+        if (data[countryInfo.Name]['events'].indexOf(event) == -1) {
+          data[countryInfo.Name]['events'].push(event);
+          switch (medal) {
+            case 'Gold':
+              data[countryInfo.Name]['total'] += 1;
+              data[countryInfo.Name]['gold'] += 1;
+              break;
+            case 'Silver':
+              data[countryInfo.Name]['total'] += 1;
+              data[countryInfo.Name]['silver'] += 1;
+              break;
+            case 'Bronze':
+              data[countryInfo.Name]['total'] += 1;
+              data[countryInfo.Name]['bronze'] += 1;
+              break;
+          }
+        }
+      }
+    }
+  });
+
+  const dataArray = [];
+  const tableArray = [];
+  Object.keys(data).forEach(country => {
+    delete data[country]['events'];
+    dataArray.push(data[country]);
+    delete data[country]['noc'];
+    tableArray.push(data[country])
+  });
+
+  table.createCountryMedalTable(tableArray, document.getElementById('countryMedals'));
+  map.plotMap(dataArray, season);
+}
