@@ -1,26 +1,32 @@
-import "./main.css";
-import "./css/map.css";
+import "./index.css";
 import 'purecss';
-import * as map from './js/map';
-import * as db from './js/database';
-import * as table from './js/table';
 
+// Import all classes
+import { Map } from './components/map/map.js';
+import { Database }from './components/database/database';
+import { Table } from './components/table/table';
+
+// Map Setup
+const mapDiv = document.getElementById('plotlyMap');
+const plotlyMap = new Map(mapDiv);
+
+// Databases Setup
+const database = new Database();
+const athleteCSV = require("./assets/csv/athlete_events.csv");
+database.loadCSVIntoDatabase(athleteCSV, 'athletes');
+const countryCodes = require("./assets/csv/countrycodes.csv");
+database.loadCSVIntoDatabase(countryCodes, 'countryCodes');
+
+// Table Setup
+const medalTableDiv = document.getElementById('medalTableDiv')
+const medalTable = new Table(medalTableDiv);
+
+// Title and Query Setup
 const titleDiv = document.getElementById('title');
-
-const athleteCSV = require("./assets/athlete_events.csv");
-db.loadCSVIntoDatabase(athleteCSV, 'athletes');
-
-const countryCodes = require("./assets/countrycodes.csv");
-db.loadCSVIntoDatabase(countryCodes, 'countryCodes');
-
 let year = '2016';
 let sex = 'M';
 let sport = 'Swimming';
 let season = 'Winter';
-
-setTitle();
-
-// map.plotMap([]);
 
 function setTitle() {
   titleDiv.innerText = `${year} ${season} Olympics - ${(sex == 'M') ? 'Male' : 'Female'} ${sport}`;
@@ -39,21 +45,25 @@ window.yearChange = (selYear) => {
 }
 
 window.changeSortSelection = (selSort) => {
-  table.changeSortSelection(selSort, document.getElementById('countryMedals'));
+  medalTable.changeSortSelection(selSort);
 }
+
+window.setMapProjectionType = (type) => {
+  plotlyMap.setMapProjectionType(type);
+}
+
 
 function query() {
   const data = {};
   const query = { Year: year };
-  if (sport == 'All') delete query['Sport'];
-  delete query['Sex']
-  db.getDatabase('athletes')(query).each(el => {
+
+  database.queryDatabase('athletes', query).forEach(el => {
     const country = el['NOC'];
     const event = el['Event'];
     const medal = el['Medal'];
 
     if (medal != 'NA') {
-      const countryInfo = db.getDatabase('countryCodes')({ NOC: country }).get()[0];
+      const countryInfo = database.queryDatabase('countryCodes', { NOC: country });
       if (countryInfo) {
         if (!data[countryInfo.Name]) {
           data[countryInfo.Name] = {
@@ -97,6 +107,10 @@ function query() {
     tableArray.push(data[country])
   });
 
-  table.createCountryMedalTable(tableArray, document.getElementById('countryMedals'));
-  map.plotMap(dataArray, season);
+  medalTable.updateTableData(tableArray);
+
+  plotlyMap.drawMap(dataArray, season);
 }
+
+
+

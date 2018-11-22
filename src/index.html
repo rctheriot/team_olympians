@@ -8,7 +8,7 @@
 
 <body>
 
-  <img id="logo" src="./assets/olympic_logo.svg"><img>
+  <img id="logo" src="./assets/images/olympic_logo.svg"><img>
 
   <div class="pure-g" style=" text-align:center">
     <div class="pure-u-1-1">
@@ -32,6 +32,10 @@
           <button class="pure-button pure-button-primary" value="Sailing" onclick="sportChange(value)">Sailing</button>
           <button class="pure-button pure-button-primary" value="All" onclick="sportChange(value)">All Events</button>
 
+          <button class="pure-button pure-button-primary" value="robinson" onclick="setMapProjectionType(value)">Robinson</button>
+          <button class="pure-button pure-button-primary" value="orthographic" onclick="setMapProjectionType(value)">Orthographic</button>
+
+
           <input type="range" step="4" min="1960" max="2016" value="2016" class="slider" id="myRange" oninput="yearChange(value)">
         </div>
       </div>
@@ -42,7 +46,7 @@
     <div class="pure-u-3-5">
       <div class="pure-g" style="text-align: center;">
         <div class="pure-u-1-1">
-          <div id="mymap"></div>
+          <div id="plotlyMap"></div>
         </div>
       </div>
       <div class="pure-g" style="text-align: center;">
@@ -68,8 +72,7 @@
                 <th onclick="changeSortSelection('total');">Total</th>
               </tr>
             </thead>
-
-            <tbody id="countryMedals">
+            <tbody id="medalTableDiv">
             </tbody>
           </table>
         </div>

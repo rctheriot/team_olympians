@@ -1,0 +1,54 @@
+body {
+    background-color: rgba(40,40,40, 1.0);
+    color: white;
+}
+
+#logo {
+    width: 200px;
+    position: absolute;
+    left: 10px;
+    top: calc(100% - 110px);
+}
+
+.pure-button{
+    margin: 5px;
+    background: rgb(223, 117, 20);
+
+}
+
+.slidecontainer {
+    width: 100%;
+}
+
+.slider {
+    -webkit-appearance: none;
+    width: 90%;
+    height: 25px;
+    background: #d3d3d3;
+    outline: none;
+    opacity: 0.7;
+    -webkit-transition: .2s;
+    transition: opacity .2s;
+}
+
+.slider:hover {
+    opacity: 1;
+}
+
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 40px;
+    height: 40px;
+    background: white;
+    cursor: pointer;
+    border-radius: 50%;
+}
+
+.slider::-moz-range-thumb {
+    width: 25px;
+    height: 25px;
+    background: #4CAF50;
+    cursor: pointer;
+}
+

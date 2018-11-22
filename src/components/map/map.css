@@ -1,0 +1,29 @@
+#plotlyMap { 
+    height: 1100px;
+}
+
+
+#plotlyMap > div > div > svg:nth-child(1) > g.geolayer > g > g.layer.bg > rect {
+    fill: rgba(40,40,40, 1.0) !important;
+}
+
+#plotlyMap > div > div > svg:nth-child(1) > g.geolayer > g > g.layer.coastlines > path {
+    stroke: white !important;
+    stroke-width: 2.5px !important;
+}
+
+#plotlyMap > div > div > svg:nth-child(1) > g.geolayer > g > g.layer.frame > path {
+    stroke: white !important;
+    stroke-width: 6px !important;
+}
+
+#colorLegend {
+    width: 80%;
+    left: 10%;
+    position: relative;
+    height: 50px;
+    background: linear-gradient(to right, rgb(253, 221, 225) 0%, rgb(163, 10, 26) 100%);
+    border: solid;
+    border-width: 4px;
+    border-color: white;
+}
