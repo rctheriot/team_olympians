@@ -7,81 +7,93 @@
 </head>
 
 <body>
+  <div id="app-container">
 
-  <img id="logo" src="./assets/images/olympic_logo.svg"><img>
+    <img id="logo" src="./assets/images/olympic_logo.svg"><img>
 
-  <div class="pure-g" style=" text-align:center">
-    <div class="pure-u-1-1">
-      <h1 id="title">Team Olympians</h1>
+    <div class="pure-g" id="grid-title">
+      <div class="pure-u-1-1">
+        <p id="title">Team Olympians</p>
+      </div>
     </div>
-  </div>
 
-  <div class="pure-g" style="text-align: center;">
-    <div class="pure-u-1-5">
-      <div class="pure-g" style="text-align: center;">
-        <div class="pure-u-1-1">
-          <h2>ToolBar 1</h2>
+    <div class="pure-g">
+
+      <div class="pure-u-1-5" id="left-toolbar">
+        <div class="pure-g">
+
+          <div class="pure-u-1-1">
+            <p class="toolbar-title">ToolBar 1</p>
+          </div>
+
+          <div class="pure-u-1-1">
+            <input type="range" step="2" min="1960" max="2016" value="2016" class="slider" id="myRange" oninput="yearChange(value)">
+
+            <button class="pure-button pure-button-primary" value="Male" onclick="genderChange(value)">Male</button>
+            <button class="pure-button pure-button-primary" value="Female" onclick="genderChange(value)">Female</button>
+            <button class="pure-button pure-button-primary" value="Both" onclick="genderChange(value)">Both</button>
+
+            <button class="pure-button pure-button-primary" value="Summer" onclick="seasonChange(value)">Summer</button>
+            <button class="pure-button pure-button-primary" value="Winter" onclick="seasonChange(value)">Winter</button>
+
+            <button class="pure-button pure-button-primary" value="Swimming" onclick="sportChange(value)">Swimming</button>
+            <button class="pure-button pure-button-primary" value="Basketball" onclick="sportChange(value)">Basketball</button>
+            <button class="pure-button pure-button-primary" value="Judo" onclick="sportChange(value)">Judo</button>
+            <button class="pure-button pure-button-primary" value="Badminton" onclick="sportChange(value)">Badminton</button>
+            <button class="pure-button pure-button-primary" value="Sailing" onclick="sportChange(value)">Sailing</button>
+            <button class="pure-button pure-button-primary" value="All" onclick="sportChange(value)">All Events</button>
+
+            <button class="pure-button pure-button-primary" value="robinson" onclick="setMapProjectionType(value)">Robinson</button>
+            <button class="pure-button pure-button-primary" value="orthographic" onclick="setMapProjectionType(value)">Orthographic</button>
+          </div>
+
         </div>
-        <div class="pure-u-1-1" style="height: 900px;">
-        </div>
-        <div class="pure-u-1-1">
-          <button class="pure-button pure-button-primary" value="Swimming" onclick="sportChange(value)">Swimming</button>
-          <button class="pure-button pure-button-primary" value="Basketball" onclick="sportChange(value)">Basketball</button>
-          <button class="pure-button pure-button-primary" value="Judo" onclick="sportChange(value)">Judo</button>
-          <button class="pure-button pure-button-primary" value="Badminton" onclick="sportChange(value)">Badminton</button>
-          <button class="pure-button pure-button-primary" value="Sailing" onclick="sportChange(value)">Sailing</button>
-          <button class="pure-button pure-button-primary" value="All" onclick="sportChange(value)">All Events</button>
+      </div>
 
-          <button class="pure-button pure-button-primary" value="robinson" onclick="setMapProjectionType(value)">Robinson</button>
-          <button class="pure-button pure-button-primary" value="orthographic" onclick="setMapProjectionType(value)">Orthographic</button>
+      <div class="pure-u-3-5" id="middle-toolbar">
+        <div class="pure-g toolbar">
 
+          <div class="pure-u-1-1">
+            <div id="plotlyMap"></div>
+          </div>
 
-          <input type="range" step="4" min="1960" max="2016" value="2016" class="slider" id="myRange" oninput="yearChange(value)">
+          <div class="pure-u-1-1">
+            <div id="colorLegend"></div>
+          </div>
+
         </div>
       </div>
 
 
-    </div>
+      <div class="pure-u-1-5" id="right-toolbar">
+        <div class="pure-g">
 
-    <div class="pure-u-3-5">
-      <div class="pure-g" style="text-align: center;">
-        <div class="pure-u-1-1">
-          <div id="plotlyMap"></div>
-        </div>
-      </div>
-      <div class="pure-g" style="text-align: center;">
-        <div class="pure-u-1-1">
-          <div id="colorLegend"></div>
-        </div>
-      </div>
+          <div class="pure-u-1-1">
+            <p class="toolbar-title">Medal Table</p>
+          </div>
+      
+          <div class="pure-u-1-1">
+            <table class="pure-table pure-table-horizontal" style="width: 90%; margin: 10px;">
+              <thead>
+                <tr>
+                  <th onclick="changeSortSelection('name');">Country</th>
+                  <th onclick="changeSortSelection('gold');">Gold</th>
+                  <th onclick="changeSortSelection('silver');">Silver</th>
+                  <th onclick="changeSortSelection('bronze');">Bronze</th>
+                  <th onclick="changeSortSelection('total');">Total</th>
+                </tr>
+              </thead>
+              <tbody id="medalTableDiv">
+              </tbody>
+            </table>
+          </div>
 
-    </div>
-    <div class="pure-u-1-5">
-      <div class="pure-g" style="text-align: center;">
-        <div class="pure-u-1-1">
-          <h2>Medal Table</h2>
-        </div>
-        <div class="pure-u-1-1">
-          <table class="pure-table pure-table-horizontal" style="width: 90%; margin: 10px;">
-            <thead>
-              <tr>
-                <th onclick="changeSortSelection('name');">Country</th>
-                <th onclick="changeSortSelection('gold');">Gold</th>
-                <th onclick="changeSortSelection('silver');">Silver</th>
-                <th onclick="changeSortSelection('bronze');">Bronze</th>
-                <th onclick="changeSortSelection('total');">Total</th>
-              </tr>
-            </thead>
-            <tbody id="medalTableDiv">
-            </tbody>
-          </table>
         </div>
       </div>
 
-
     </div>
-
   </div>
 
 </body>
+
 </html>

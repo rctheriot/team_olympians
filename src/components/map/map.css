@@ -1,7 +1,4 @@
-#plotlyMap { 
-    height: 1100px;
-}
-
+/* Map Style */
 
 #plotlyMap > div > div > svg:nth-child(1) > g.geolayer > g > g.layer.bg > rect {
     fill: rgba(40,40,40, 1.0) !important;

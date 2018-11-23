@@ -1,19 +1,54 @@
-body {
+/*  Main Style */
+
+#app-container {
+    width: 100%;
+    height: 37.5vw;
     background-color: rgba(40,40,40, 1.0);
     color: white;
 }
 
 #logo {
-    width: 200px;
     position: absolute;
-    left: 10px;
-    top: calc(100% - 110px);
+    height: 2.5vw;
+    top: calc(37.5vw - 3vw);
+}
+
+#grid-title {
+    text-align: center;
+}
+
+#title {
+    font-size: 2vw;
+    margin: 0px;
+}
+
+.pure-g {
+    text-align: center;
+    max-height: 100% !important;
+}
+
+.purge-g.toolbar {
+    max-height: 100% !important;
+}
+
+#left-toolbar {
+    height: 30vw;
+}
+#middle-toolbar {
+    height: 30vw;
+}
+#right-toolbar {
+    height: 30vw;
+}
+
+.toolbar-title {
+    font-size: 1.5vw;
 }
 
 .pure-button{
-    margin: 5px;
+    margin: 5%;
+    width: 30%;
     background: rgb(223, 117, 20);
-
 }
 
 .slidecontainer {
