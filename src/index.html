@@ -23,28 +23,47 @@
         <div class="pure-g">
 
           <div class="pure-u-1-1">
-            <p class="toolbar-title">ToolBar 1</p>
+            <p class="toolbar-title">Controls</p>
           </div>
 
+
           <div class="pure-u-1-1">
-            <input type="range" step="2" min="1960" max="2016" value="2016" class="slider" id="myRange" oninput="yearChange(value)">
-
-            <button class="pure-button pure-button-primary" value="Male" onclick="genderChange(value)">Male</button>
-            <button class="pure-button pure-button-primary" value="Female" onclick="genderChange(value)">Female</button>
-            <button class="pure-button pure-button-primary" value="Both" onclick="genderChange(value)">Both</button>
-
-            <button class="pure-button pure-button-primary" value="Summer" onclick="seasonChange(value)">Summer</button>
-            <button class="pure-button pure-button-primary" value="Winter" onclick="seasonChange(value)">Winter</button>
-
-            <button class="pure-button pure-button-primary" value="Swimming" onclick="sportChange(value)">Swimming</button>
-            <button class="pure-button pure-button-primary" value="Basketball" onclick="sportChange(value)">Basketball</button>
-            <button class="pure-button pure-button-primary" value="Judo" onclick="sportChange(value)">Judo</button>
-            <button class="pure-button pure-button-primary" value="Badminton" onclick="sportChange(value)">Badminton</button>
-            <button class="pure-button pure-button-primary" value="Sailing" onclick="sportChange(value)">Sailing</button>
-            <button class="pure-button pure-button-primary" value="All" onclick="sportChange(value)">All Events</button>
-
-            <button class="pure-button pure-button-primary" value="robinson" onclick="setMapProjectionType(value)">Robinson</button>
-            <button class="pure-button pure-button-primary" value="orthographic" onclick="setMapProjectionType(value)">Orthographic</button>
+              <h1>Year</h1>
+              <button class="pure-button pure-button-primary" value="2016" onclick="yearChange(value)">2016 / 2014</button>
+              <button class="pure-button pure-button-primary" value="2014" onclick="yearChange(value)">2010 / 2012</button>
+              <button class="pure-button pure-button-primary" value="2008" onclick="yearChange(value)">2006 / 2008</button>
+              <button class="pure-button pure-button-primary" value="2004" onclick="yearChange(value)">2002 / 2004</button>
+              <button class="pure-button pure-button-primary" value="2000" onclick="yearChange(value)">1998 / 2000</button>
+              <button class="pure-button pure-button-primary" value="1996" onclick="yearChange(value)">1994 / 1996</button>
+              <button class="pure-button pure-button-primary" value="1992" onclick="yearChange(value)">1992</button>
+              <button class="pure-button pure-button-primary" value="1988" onclick="yearChange(value)">1988</button>
+              <button class="pure-button pure-button-primary" value="1984" onclick="yearChange(value)">1984</button>
+              <button class="pure-button pure-button-primary" value="1980" onclick="yearChange(value)">1980</button>
+              <button class="pure-button pure-button-primary" value="2976" onclick="yearChange(value)">1976</button>
+              <button class="pure-button pure-button-primary" value="1972" onclick="yearChange(value)">1972</button>
+              <button class="pure-button pure-button-primary" value="1968" onclick="yearChange(value)">1968</button>
+              <button class="pure-button pure-button-primary" value="1964" onclick="yearChange(value)">1964</button>
+              <button class="pure-button pure-button-primary" value="1960" onclick="yearChange(value)">1960</button>
+              <button class="pure-button pure-button-primary" value="1956" onclick="yearChange(value)">1956</button>
+              <button class="pure-button pure-button-primary" value="1952" onclick="yearChange(value)">1952</button>
+              <button class="pure-button pure-button-primary" value="1948" onclick="yearChange(value)">1948</button>
+            <hr>
+              <h1>Season</h1>
+              <button class="pure-button pure-button-primary" value="Summer" onclick="seasonChange(value)">Summer</button>
+              <button class="pure-button pure-button-primary" value="Winter" onclick="seasonChange(value)">Winter</button>
+            <hr>
+              <h1>Gender</h1>
+              <button class="pure-button pure-button-primary" value="Male" onclick="genderChange(value)">Male</button>
+              <button class="pure-button pure-button-primary" value="Female" onclick="genderChange(value)">Female</button>
+              <button class="pure-button pure-button-primary" value="Both" onclick="genderChange(value)">Both</button>
+            <hr>
+              <h1>Sport</h1>
+              <button class="pure-button pure-button-primary" value="All" onclick="sportChange(value)">All Events</button>
+              <button class="pure-button pure-button-primary" value="Swimming" onclick="sportChange(value)">Swimming</button>
+              <button class="pure-button pure-button-primary" value="Basketball" onclick="sportChange(value)">Basketball</button>
+              <button class="pure-button pure-button-primary" value="Judo" onclick="sportChange(value)">Judo</button>
+              <button class="pure-button pure-button-primary" value="Badminton" onclick="sportChange(value)">Badminton</button>
+              <button class="pure-button pure-button-primary" value="Sailing" onclick="sportChange(value)">Sailing</button>
           </div>
 
         </div>
@@ -59,8 +78,10 @@
 
           <div class="pure-u-1-1">
             <div id="colorLegend"></div>
+            <button class="pure-button pure-button-primary" value="robinson" onclick="setMapProjectionType(value)">Robinson</button>
+            <button class="pure-button pure-button-primary" value="orthographic" onclick="setMapProjectionType(value)">Orthographic</button>
+            <button class="pure-button pure-button-primary" value="equirectangular" onclick="setMapProjectionType(value)">Equirectangular</button>
           </div>
-
         </div>
       </div>
 
@@ -69,9 +90,9 @@
         <div class="pure-g">
 
           <div class="pure-u-1-1">
-            <p class="toolbar-title">Medal Table</p>
+            <p class="toolbar-title">Charts/Tables</p>
           </div>
-      
+
           <div class="pure-u-1-1">
             <table class="pure-table pure-table-horizontal" style="width: 90%; margin: 10px;">
               <thead>

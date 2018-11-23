@@ -4,14 +4,14 @@ import * as Plotly from 'plotly.js-dist';
 
 export class Map {
 
-  constructor(mapDiv) {
+  constructor(mapDiv, projection) {
     this.mapDiv = mapDiv;
     this.hostCityColor = '#F7C736';
     this.colorScales = {
       Summer: [[0, 'rgb(253, 221, 225)'], [1.0, 'rgb(163, 10, 26)']],
       Winter: [[0, 'rgb(190,240,255)'], [1.0, 'rgb(10, 89, 128)']],
     }
-    this.projectionType = 'robinson';
+    this.projectionType = projection;
     this.mapData = [];
     this.season = 'Summer';
     this.drawMap([], 'Summer');
@@ -24,11 +24,11 @@ export class Map {
     const text = [];
     this.mapData = dataPoints;
     this.season = season;
-  
+
     this.mapData.forEach(el => {
-      locations.push(el['name']);
+      locations.push(el['noc']);
       z.push(el['total']);
-      text.push(el['name']);
+      text.push(el['name'] - 'cat');
     });
 
     var data = [{
@@ -45,7 +45,7 @@ export class Map {
       locations: locations,
       z: z,
       text: text,
-   
+
     }, {
       type: 'scattergeo',
       mode: 'markers',
@@ -59,7 +59,7 @@ export class Map {
       },
       name: 'Host City'
     }];
-  
+
     var layout = {
       geo: {
         projection: {
@@ -73,8 +73,9 @@ export class Map {
         }
       },
       paper_bgcolor: "rgba(40,40,40, 1.0)",
+      dragmode: 'pan'
     };
-  
+
     Plotly.newPlot(this.mapDiv, data, layout, { showLink: false, displayModeBar: false });
     this.resize();
   }
@@ -85,19 +86,19 @@ export class Map {
 
   setMapProjectionType(projectionType) {
     this.projectionType = projectionType;
-    this.drawMap(this.mapData);
+    this.drawMap(this.mapData, this.season);
   }
 
   setSeason(season) {
     this.season = season;
-    this.setLegendColor(season); 
+    this.setLegendColor(season);
   }
 
   resize() {
     const w = this.mapDiv.parentNode.parentNode.parentNode.getBoundingClientRect().width;
     const h = this.mapDiv.parentNode.parentNode.parentNode.getBoundingClientRect().height * 0.90;
     const update = { width: w, height: h };
- 
+
     Plotly.relayout(this.mapDiv, update);
   }
 

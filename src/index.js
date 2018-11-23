@@ -8,7 +8,7 @@ import { Table } from './components/table/table';
 
 // Map Setup
 const mapDiv = document.getElementById('plotlyMap');
-const plotlyMap = new Map(mapDiv);
+const plotlyMap = new Map(mapDiv, 'robinson');
 
 // Databases Setup
 const database = new Database();
@@ -23,21 +23,21 @@ const medalTable = new Table(medalTableDiv);
 
 // Title and Query Setup
 let year = '2016';
-let sex = 'Male';
-let sport = 'Swimming';
+let sex = 'Both';
+let sport = 'All';
 let season = 'Summer';
 let query = {};
-setQuery();
-setTitle();
 const titleDiv = document.getElementById('title');
 
 function setQuery() {
   query = { Year: { lte: year, gte: (Number(year) - 2).toString() }, Sport: sport, Season: season, Sex: sex };
   if (sex == "Both") {
     delete query['Sex'];
-    if (sport == 'All') {
-      delete query['Sport'];
-    }
+  } else {
+    query.Sex = (sex == 'Male') ? 'M' : 'F';
+  }
+  if (sport == 'All') {
+    delete query['Sport'];
   }
   console.log(query);
 }
@@ -71,6 +71,7 @@ window.sportChange = (selSport) => {
 
 window.seasonChange = (selSeason) => {
   season = selSeason;
+  updateUIColor();
   setTitle();
   setQuery();
   plotlyMap.setSeason(season);
@@ -89,58 +90,104 @@ window.onresize = () => {
   plotlyMap.resize();
 }
 
-function startQuery() {
-  const data = {};
-  database.queryDatabase('athletes', query).forEach(el => {
-    const country = el['NOC'];
-    const event = el['Event'];
-    const medal = el['Medal'];
-
-    if (medal != 'NA') {
-
-      if (!data[country]) {
-        data[country] = {
-          'name': country,
-          'gold': 0,
-          'silver': 0,
-          'bronze': 0,
-          'total': 0,
-          'events': []
-        }
-      }
-      if (data[country]['events'].indexOf(event) == -1) {
-        data[country]['events'].push(event);
-        switch (medal) {
-          case 'Gold':
-            data[country]['total'] += 1;
-            data[country]['gold'] += 1;
-            break;
-          case 'Silver':
-            data[country]['total'] += 1;
-            data[country]['silver'] += 1;
-            break;
-          case 'Bronze':
-            data[country]['total'] += 1;
-            data[country]['bronze'] += 1;
-            break;
-        }
-      }
-    }
-
-  });
-
-  const dataArray = [];
-  const tableArray = [];
-  Object.keys(data).forEach(country => {
-    delete data[country]['events'];
-    dataArray.push(data[country]);
-    tableArray.push(data[country])
-  });
-
-  // medalTable.updateTableData(tableArray);
-
-  plotlyMap.drawMap(dataArray, season);
+function updateUIColor() {
+  const color = (season == 'Summer') ? 'rgb(163, 10, 26)' : 'rgb(10, 89, 128)';
+  const elements = document.getElementsByClassName('pure-button pure-button-primary');
+  for (let i = 0; i < elements.length; i++) {
+    elements[i].style.background = color;
+  }
 }
 
+function createAthleteDataRow(athleteInfo, countryInfo) {
+  return {
+    name: athleteInfo['Name'],
+    sex: athleteInfo['Sex'],
+    age: athleteInfo['Age'],
+    height: athleteInfo['Height'],
+    weight: athleteInfo['Weight'],
+    country: countryInfo['Name'],
+    events: [],
+  }
+}
+
+function createAthleteEventInfo(athleteInfo) {
+  return {
+    event: athleteInfo['Event'],
+    sport: athleteInfo['Sport'],
+    medal: athleteInfo['Medal'],
+    year: athleteInfo['Year']
+  }
+}
+
+function createCountryDataRow(countryInfo) {
+  return {
+    'name': countryInfo['Name'],
+    'noc': countryInfo['NOC'],
+    'gold': [],
+    'silver': [],
+    'bronze': [],
+    'na': [],
+    'total': [],
+  }
+}
+
+const BreakException = {};
+
+function startQuery() {
+  let athleteData = {};
+  let countryData = {};
+  let fixYear = false;
+  database.queryDatabase('athletes', query).forEach(athleteInfo => {
+    if (!fixYear) { year = athleteInfo['Year']; setTitle(); fixYear = true; }
+    try {
+      // Country CSV: Name,Code,NOC
+      const countryInfo = database.queryDatabase('countryCodes', { NOC: athleteInfo['NOC'] })[0];
+      if (!countryInfo) throw BreakException;
+      const countryName = countryInfo['Name'];
+      // Does the Country Exist Yet?
+      if (!countryData[countryName]) { countryData[countryName] = createCountryDataRow(countryInfo); }
+      // Add Athlete Medal to Coutnry Medal Categories.
+      // Add event name so we can track which events have been alraedy countryed
+      countryData[countryName]['total'].push(athleteInfo['Event']);
+      countryData[countryName][athleteInfo['Medal'].toLowerCase()].push(athleteInfo['Event']);
+
+      // Athelete CSV: "ID","Name","Sex","Age","Height","Weight","Team","NOC","Games","Year","Season","City","Sport","Event","Medal"
+      // AthleteID From the CSV
+      const athleteId = athleteInfo['ID'];
+      // Does the Athlete Exist Yet?
+      if (!athleteData[athleteId]) { athleteData[athleteId] = createAthleteDataRow(athleteInfo, countryInfo); }
+      //Add this Event to the athlete's event array
+      athleteData[athleteId].events.push(createAthleteEventInfo(athleteInfo));
+
+      // const dataArray = [];
+      // const tableArray = [];
+      // Object.keys(data).forEach(country => {
+      //   delete data[country]['events'];
+      //   dataArray.push(data[country]);
+      //   tableArray.push(data[country])
+      // });
+    } catch (e) {
+      if (e !== BreakException) throw e;
+    }
+  });
+  // medalTable.updateTableData(tableArray);
+
+  const mapData = [];
+  Object.keys(countryData).forEach(country => {
+    countryData[country]['gold'] = [...new Set(countryData[country]['gold'])].length;
+    countryData[country]['silver'] = [...new Set(countryData[country]['silver'])].length;
+    countryData[country]['bronze'] = [...new Set(countryData[country]['bronze'])].length;
+    countryData[country]['na'] = [...new Set(countryData[country]['na'])].length;
+    countryData[country]['total'] = countryData[country]['gold'] + countryData[country]['silver'] + countryData[country]['bronze'];
+    mapData.push(countryData[country])
+  })
+  plotlyMap.drawMap(mapData, season);
+}
+
+setTimeout(() => {
+  setQuery();
+  setTitle();
+  startQuery();
+}, 1000);
 
 
