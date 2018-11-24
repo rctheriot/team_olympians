@@ -5,6 +5,7 @@ import 'purecss';
 import { Map } from './components/map/map.js';
 import { Database } from './components/database/database';
 import { Table } from './components/table/table';
+import { Hosts } from './hosts';
 
 // Map Setup
 const mapDiv = document.getElementById('plotlyMap');
@@ -137,8 +138,14 @@ function startQuery() {
   let athleteData = {};
   let countryData = {};
   let fixYear = false;
+  let hostCity = {};
+
   database.queryDatabase('athletes', query).forEach(athleteInfo => {
-    if (!fixYear) { year = athleteInfo['Year']; setTitle(); fixYear = true; }
+    if (!fixYear) { 
+      year = athleteInfo['Year']; 
+      setTitle(); fixYear = true; 
+      hostCity = Hosts.find(host => (host.Year.toString() == athleteInfo['Year'] && host.Season.toString() == athleteInfo['Season']))
+    }
     try {
       // Country CSV: Name,Code,NOC
       const countryInfo = database.queryDatabase('countryCodes', { NOC: athleteInfo['NOC'] })[0];
@@ -159,18 +166,13 @@ function startQuery() {
       //Add this Event to the athlete's event array
       athleteData[athleteId].events.push(createAthleteEventInfo(athleteInfo));
 
-      // const dataArray = [];
-      // const tableArray = [];
-      // Object.keys(data).forEach(country => {
-      //   delete data[country]['events'];
-      //   dataArray.push(data[country]);
-      //   tableArray.push(data[country])
-      // });
     } catch (e) {
       if (e !== BreakException) throw e;
     }
   });
   // medalTable.updateTableData(tableArray);
+  console.log(countryData);
+  console.log(athleteData);
 
   const mapData = [];
   Object.keys(countryData).forEach(country => {
@@ -179,15 +181,16 @@ function startQuery() {
     countryData[country]['bronze'] = [...new Set(countryData[country]['bronze'])].length;
     countryData[country]['na'] = [...new Set(countryData[country]['na'])].length;
     countryData[country]['total'] = countryData[country]['gold'] + countryData[country]['silver'] + countryData[country]['bronze'];
-    mapData.push(countryData[country])
+    mapData.push(countryData[country]) 
   })
-  plotlyMap.drawMap(mapData, season);
+
+  plotlyMap.drawMap(mapData, season, hostCity['City'], hostCity['Lat'], hostCity['Long']);
 }
 
 setTimeout(() => {
   setQuery();
   setTitle();
   startQuery();
-}, 1000);
+}, 2000);
 
 

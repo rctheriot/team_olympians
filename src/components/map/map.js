@@ -6,7 +6,7 @@ export class Map {
 
   constructor(mapDiv, projection) {
     this.mapDiv = mapDiv;
-    this.hostCityColor = '#F7C736';
+    this.hostCityColor = '#0da447';
     this.colorScales = {
       Summer: [[0, 'rgb(253, 221, 225)'], [1.0, 'rgb(163, 10, 26)']],
       Winter: [[0, 'rgb(190,240,255)'], [1.0, 'rgb(10, 89, 128)']],
@@ -18,7 +18,7 @@ export class Map {
     this.plotlyMap = null;
   }
 
-  drawMap(dataPoints, season) {
+  drawMap(dataPoints, season, hostName, latitude, longitude) {
     const locations = [];
     const z = [];
     const text = [];
@@ -46,10 +46,11 @@ export class Map {
       z: z,
       text: text,
 
-    }, {
+    },{
       type: 'scattergeo',
       mode: 'markers',
-      locations: ['USA'],
+      lon: [longitude],
+      lat: [latitude],
       marker: {
         size: 15,
         color: this.hostCityColor,
@@ -57,8 +58,9 @@ export class Map {
           width: 1
         }
       },
-      name: 'Host City'
-    }];
+      name: hostName
+    }
+  ];
 
     var layout = {
       geo: {
