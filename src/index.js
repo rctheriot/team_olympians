@@ -32,6 +32,7 @@ const titleDiv = document.getElementById('title');
 
 function setQuery() {
   query = { Year: { lte: year, gte: (Number(year) - 2).toString() }, Sport: sport, Season: season, Sex: sex };
+  updateUIColor();
   if (sex == "Both") {
     delete query['Sex'];
   } else {
@@ -97,6 +98,13 @@ function updateUIColor() {
   for (let i = 0; i < elements.length; i++) {
     elements[i].style.background = color;
   }
+  // Change button year to correspond to season
+  document.getElementById('14/16button').textContent = (season == 'Summer') ? '2016' : '2014';
+  document.getElementById('10/12button').textContent = (season == 'Summer') ? '2012' : '2010';
+  document.getElementById('06/08button').textContent = (season == 'Summer') ? '2008' : '2006';
+  document.getElementById('02/04button').textContent = (season == 'Summer') ? '2004' : '2002';
+  document.getElementById('98/00button').textContent = (season == 'Summer') ? '1998' : '2000';
+  document.getElementById('94/96button').textContent = (season == 'Summer') ? '1994' : '1996';
 }
 
 function createAthleteDataRow(athleteInfo, countryInfo) {
@@ -129,6 +137,7 @@ function createCountryDataRow(countryInfo) {
     'bronze': [],
     'na': [],
     'total': [],
+    'code': countryInfo['Code'],
   }
 }
 
@@ -175,6 +184,7 @@ function startQuery() {
   console.log(athleteData);
 
   const mapData = [];
+  const nataionData= [];
   Object.keys(countryData).forEach(country => {
     countryData[country]['gold'] = [...new Set(countryData[country]['gold'])].length;
     countryData[country]['silver'] = [...new Set(countryData[country]['silver'])].length;
@@ -182,7 +192,11 @@ function startQuery() {
     countryData[country]['na'] = [...new Set(countryData[country]['na'])].length;
     countryData[country]['total'] = countryData[country]['gold'] + countryData[country]['silver'] + countryData[country]['bronze'];
     mapData.push(countryData[country]) 
+    countryData[country]['code']
   })
+
+  //LoadImages(mapData);
+  setPodium(mapData);
 
   plotlyMap.drawMap(mapData, season, hostCity['City'], hostCity['Lat'], hostCity['Long']);
 }
@@ -193,4 +207,27 @@ setTimeout(() => {
   startQuery();
 }, 2000);
 
+function setPodium(data) {
+  data.sort(function(a, b) {
+    var keyA = a['total'];
+    var keyB = b['total'];
+    return keyB - keyA; 
+  });
+  console.log(data[0]);
+  console.log(data[1]);
+  console.log(data[2]);
+  //document.getElementById('firstnation').src = "./assets/flags-normal/" + data[0]['code'].toLowerCase() + ".png";
+}
 
+function LoadImages(reference) {
+  reference.forEach(element => {
+    var image = new Image();
+    image.src = './assets/flags-normal/' + element['code'].toLowerCase() + '.png';
+    image.onload = function() { imagecallback(); };
+
+  });
+}
+
+function imagecallback() {
+  return;
+}
