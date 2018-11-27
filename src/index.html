@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <title>Team Olympians</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.2/semantic.min.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.2/semantic.min.css" />
 </head>
 
 <body>
@@ -13,8 +13,8 @@
     <img id="logo" src="./assets/images/olympic_logo.svg"><img>
 
     <div class="pure-g" id="grid-title">
-      <div class="pure-u-1-1">
-        <p id="title">Team Olympians</p>
+      <div class="pure-u-1-1" style="height: 20px; z-index: 100;">
+        <p id="title">Olympic Medal Data from 1948 to 2016</p>
       </div>
     </div>
 
@@ -23,48 +23,42 @@
       <div class="pure-u-1-5" id="left-toolbar">
         <div class="pure-g">
 
-          <div class="pure-u-1-1">
-            <p class="toolbar-title">Controls</p>
-          </div>
+          <div class="pure-u-1-1" style="margin: 20px;">
 
-
-          <div class="pure-u-1-1">
-              <h1>Year</h1>
-              <button class="pure-button pure-button-primary" value="2016" onclick="yearChange(value)" id="14/16button"></button>
-              <button class="pure-button pure-button-primary" value="2014" onclick="yearChange(value)" id="10/12button"></button>
-              <button class="pure-button pure-button-primary" value="2008" onclick="yearChange(value)" id="06/08button"></button>
-              <button class="pure-button pure-button-primary" value="2004" onclick="yearChange(value)" id="02/04button"></button>
-              <button class="pure-button pure-button-primary" value="2000" onclick="yearChange(value)" id="98/00button"></button>
-              <button class="pure-button pure-button-primary" value="1996" onclick="yearChange(value)" id="94/96button"></button>
-              <button class="pure-button pure-button-primary" value="1992" onclick="yearChange(value)">1992</button>
-              <button class="pure-button pure-button-primary" value="1988" onclick="yearChange(value)">1988</button>
-              <button class="pure-button pure-button-primary" value="1984" onclick="yearChange(value)">1984</button>
-              <button class="pure-button pure-button-primary" value="1980" onclick="yearChange(value)">1980</button>
-              <button class="pure-button pure-button-primary" value="2976" onclick="yearChange(value)">1976</button>
-              <button class="pure-button pure-button-primary" value="1972" onclick="yearChange(value)">1972</button>
-              <button class="pure-button pure-button-primary" value="1968" onclick="yearChange(value)">1968</button>
-              <button class="pure-button pure-button-primary" value="1964" onclick="yearChange(value)">1964</button>
-              <button class="pure-button pure-button-primary" value="1960" onclick="yearChange(value)">1960</button>
-              <button class="pure-button pure-button-primary" value="1956" onclick="yearChange(value)">1956</button>
-              <button class="pure-button pure-button-primary" value="1952" onclick="yearChange(value)">1952</button>
-              <button class="pure-button pure-button-primary" value="1948" onclick="yearChange(value)">1948</button>
-            <hr>
-              <h1>Season</h1>
-              <button class="pure-button pure-button-primary" value="Summer" onclick="seasonChange(value)">Summer</button>
-              <button class="pure-button pure-button-primary" value="Winter" onclick="seasonChange(value)">Winter</button>
-            <hr>
-              <h1>Gender</h1>
-              <button class="pure-button pure-button-primary" value="Male" onclick="genderChange(value)">Male</button>
-              <button class="pure-button pure-button-primary" value="Female" onclick="genderChange(value)">Female</button>
-              <button class="pure-button pure-button-primary" value="Both" onclick="genderChange(value)">Both</button>
-            <hr>
-              <h1>Sport</h1>
-              <button class="pure-button pure-button-primary" value="All" onclick="sportChange(value)">All Events</button>
-              <button class="pure-button pure-button-primary" value="Swimming" onclick="sportChange(value)">Swimming</button>
-              <button class="pure-button pure-button-primary" value="Basketball" onclick="sportChange(value)">Basketball</button>
-              <button class="pure-button pure-button-primary" value="Judo" onclick="sportChange(value)">Judo</button>
-              <button class="pure-button pure-button-primary" value="Badminton" onclick="sportChange(value)">Badminton</button>
-              <button class="pure-button pure-button-primary" value="Sailing" onclick="sportChange(value)">Sailing</button>
+            <h1>Season</h1>
+            <button class="pure-button pure-button-primary" value="Summer" onclick="seasonChange(this)">Summer</button>
+            <button class="pure-button pure-button-primary" value="Winter" onclick="seasonChange(this)">Winter</button>
+            <h1>Year</h1>
+            <button class="pure-button pure-button-primary" value="2016" onclick="yearChange(this)" id="14/16button">2016</button>
+            <button class="pure-button pure-button-primary" value="2014" onclick="yearChange(this)" id="10/12button">2012</button>
+            <button class="pure-button pure-button-primary" value="2008" onclick="yearChange(this)" id="06/08button">2008</button>
+            <button class="pure-button pure-button-primary" value="2004" onclick="yearChange(this)" id="02/04button">2004</button>
+            <button class="pure-button pure-button-primary" value="2000" onclick="yearChange(this)" id="98/00button">2000</button>
+            <button class="pure-button pure-button-primary" value="1996" onclick="yearChange(this)" id="94/96button">1996</button>
+            <button class="pure-button pure-button-primary" value="1992" onclick="yearChange(this)">1992</button>
+            <button class="pure-button pure-button-primary" value="1988" onclick="yearChange(this)">1988</button>
+            <button class="pure-button pure-button-primary" value="1984" onclick="yearChange(this)">1984</button>
+            <button class="pure-button pure-button-primary" value="1980" onclick="yearChange(this)">1980</button>
+            <button class="pure-button pure-button-primary" value="2976" onclick="yearChange(this)">1976</button>
+            <button class="pure-button pure-button-primary" value="1972" onclick="yearChange(this)">1972</button>
+            <button class="pure-button pure-button-primary" value="1968" onclick="yearChange(this)">1968</button>
+            <button class="pure-button pure-button-primary" value="1964" onclick="yearChange(this)">1964</button>
+            <button class="pure-button pure-button-primary" value="1960" onclick="yearChange(this)">1960</button>
+            <button class="pure-button pure-button-primary" value="1956" onclick="yearChange(this)">1956</button>
+            <button class="pure-button pure-button-primary" value="1952" onclick="yearChange(this)">1952</button>
+            <button class="pure-button pure-button-primary" value="1948" onclick="yearChange(this)">1948</button>
+            <h1>Gender</h1>
+            <button class="pure-button pure-button-primary" value="Male" onclick="genderChange(this)">Male</button>
+            <button class="pure-button pure-button-primary" value="Female" onclick="genderChange(this)">Female</button>
+            <button class="pure-button pure-button-primary" value="Both" onclick="genderChange(this)">Both</button>
+            <h1>Medal</h1>
+            <button class="pure-button pure-button-primary" value="gold" onclick="medalChange(this)">Gold</button>
+            <button class="pure-button pure-button-primary" value="silver" onclick="medalChange(this)">Silver</button>
+            <button class="pure-button pure-button-primary" value="bronze" onclick="medalChange(this)">Bronze</button>
+            <button class="pure-button pure-button-primary" value="total" onclick="medalChange(this)">Total</button>
+            <h1>Sport</h1>
+            <div id="sport-list">
+            </div>
           </div>
 
         </div>
@@ -78,7 +72,15 @@
           </div>
 
           <div class="pure-u-1-1">
+            <div class="pure-g toolbar" style="width: 80%; height: 10px;">
+              <div class="pure-u-1-3" style="text-align: left; font-size: 25px; transform: translate(230px, -15px);">0</div>
+              <div class="pure-u-1-3" id="legendMiddle" style="text-align: center; font-size: 25px; transform: translate(230px, -15px);">0.5</div>
+              <div class="pure-u-1-3" id="legendHigh" style="text-align: right; font-size: 25px; transform: translate(230px, -15px);">1</div>
+            </div>
             <div id="colorLegend"></div>
+          </div>
+
+          <div class="pure-u-1-1">
             <button class="pure-button pure-button-primary" value="robinson" onclick="setMapProjectionType(value)">Robinson</button>
             <button class="pure-button pure-button-primary" value="orthographic" onclick="setMapProjectionType(value)">Orthographic</button>
             <button class="pure-button pure-button-primary" value="equirectangular" onclick="setMapProjectionType(value)">Equirectangular</button>
@@ -99,20 +101,21 @@
               <div class="pure-u-1-3">
                 <!--<img class="ui centered small image" style="margin-left: 100px; padding-top: 100px; position: relative; top:80px;" src="./assets/flags-normal/af.png">-->
                 <div id="secondpodium">
-                  <img id="secondnation" class="ui centered small image" style="top: -120px;" src="./assets/flags-normal/af.png">
-                  <p style="color: darkslategray; font-size: 110px; line-height: 25px">2</p>
+                  <img id="secondnation" class="ui centered image flag" style="top: -120px; height: 100px;" src="https://jkbishay.github.io/images/flags-normal/af.png">
+                  <p id="secondText" style="color: darkslategray; font-size: 90px; line-height: 25px">2</p>
                 </div>
               </div>
               <div class="pure-u-1-3">
                 <div id="firstpodium">
-                  <img id="firstnation" class="ui centered small image" style="top: -120px;" src="./assets/flags-normal/us.png">
-                  <p style="color: rgb(194, 107, 0); font-size: 150px; line-height: 100px">1</p>
+                  <img id="firstnation" class="ui centered image flag" style="top: -120px; height: 100px;" src="./assets/flags-normal/us.png">
+                  <p id="firstText" style="color: rgb(194, 107, 0); font-size: 120px; line-height: 100px">1</p>
                 </div>
               </div>
               <div class="pure-u-1-3">
                 <div id="thirdpodium">
-                  <img id="thirdnation" class="ui centered small image" style="top: -120px; margin-bottom: -80px;" src="./assets/flags-normal/ks.png">
-                  <p style="color: darkred; font-size: 70px;">3</p>
+                  <img id="thirdnation" class="ui centered image flag" style="top: -120px; height: 100px; margin-bottom: -80px;"
+                    src="./assets/flags-normal/ks.png">
+                  <p id="thirdText" style="color: darkred; font-size: 70px;">3</p>
                 </div>
               </div>
             </div>
@@ -120,19 +123,7 @@
           </div>
 
           <div class="pure-u-1-1">
-            <table class="pure-table pure-table-horizontal" style="width: 90%; margin: 10px;">
-              <thead>
-                <tr>
-                  <th onclick="changeSortSelection('name');">Country</th>
-                  <th onclick="changeSortSelection('gold');">Gold</th>
-                  <th onclick="changeSortSelection('silver');">Silver</th>
-                  <th onclick="changeSortSelection('bronze');">Bronze</th>
-                  <th onclick="changeSortSelection('total');">Total</th>
-                </tr>
-              </thead>
-              <tbody id="medalTableDiv">
-              </tbody>
-            </table>
+
           </div>
 
         </div>

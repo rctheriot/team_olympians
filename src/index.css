@@ -12,8 +12,9 @@ body {
 
 #logo {
     position: absolute;
-    height: 2.5vw;
-    top: calc(100% - 2.5vw);
+    height: 2.75vw;
+    left: calc(100% - 220px);
+    top: calc(100% - 2.85vw);
 }
 
 #grid-title {
@@ -21,14 +22,16 @@ body {
 }
 
 #title {
-    font-size: 2vw;
-    margin: 0px;
+    font-size: 84px;
+    margin: 0px; 
 }
 
 #firstpodium {
     width: 200px;
     height: 300px;
     background: gold;
+    box-shadow: 4px 5px 8px 0 rgba(0, 0, 0, 0.25), 5px 10px 30px 0 rgba(0, 0, 0, 0.65);
+    border-radius: 10px;
 }
 
 #secondpodium {
@@ -36,6 +39,8 @@ body {
     height: 200px;
     margin-top: 100px;
     background: silver;
+    box-shadow: 4px 5px 8px 0 rgba(0, 0, 0, 0.25), 5px 10px 30px 0 rgba(0, 0, 0, 0.65);
+    border-radius: 10px;
 }
 
 #thirdpodium {
@@ -43,6 +48,8 @@ body {
     height: 125px;
     margin-top: 175px;
     background: #cd7f32;
+    box-shadow: 4px 5px 8px 0 rgba(0, 0, 0, 0.25), 5px 10px 30px 0 rgba(0, 0, 0, 0.65);
+    border-radius: 10px;
 }
 
 .pure-g {
@@ -65,50 +72,24 @@ body {
 }
 
 .toolbar-title {
-    font-size: 1.5vw;
+    font-size: 48px;
+    text-align: center;
 }
 
 .pure-button.pure-button-primary {
     margin: 1%;
-    width: 30%;
+    width: 20%;
     background: rgb(123, 10, 16);
-    border-radius: 4px;
-    font-size: 130%;
+    border-radius: 10px;
+    font-size: 125%;
+    overflow: hidden;
+    box-shadow: 4px 5px 8px 0 rgba(0, 0, 0, 0.25), 5px 10px 30px 0 rgba(0, 0, 0, 0.65);
 }
 
-.slidecontainer {
-    width: 100%;
+.pure-button.pure-button-primary.selected-button {
+    background: rgb(0, 100, 16) !important;
 }
 
-.slider {
-    -webkit-appearance: none;
-    width: 90%;
-    height: 25px;
-    background: #d3d3d3;
-    outline: none;
-    opacity: 0.7;
-    -webkit-transition: .2s;
-    transition: opacity .2s;
+.flag {
+    box-shadow: 4px 5px 8px 0 rgba(0, 0, 0, 0.35), 5px 10px 30px 0 rgba(0, 0, 0, 0.75);
 }
-
-.slider:hover {
-    opacity: 1;
-}
-
-.slider::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 40px;
-    height: 40px;
-    background: white;
-    cursor: pointer;
-    border-radius: 50%;
-}
-
-.slider::-moz-range-thumb {
-    width: 25px;
-    height: 25px;
-    background: #4CAF50;
-    cursor: pointer;
-}
-

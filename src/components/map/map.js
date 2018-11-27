@@ -18,21 +18,30 @@ export class Map {
     this.plotlyMap = null;
   }
 
-  drawMap(dataPoints, season, hostName, latitude, longitude) {
+  drawMap(dataPoints, season, medal, hostName, latitude, longitude) {
     const locations = [];
     const z = [];
     const text = [];
     this.mapData = dataPoints;
     this.season = season;
 
+
     this.mapData.forEach(el => {
-      locations.push(el['noc']);
-      z.push(el['total']);
+      locations.push(el['name']);
+      z.push(el[medal]);
       text.push(el['name'] - 'cat');
     });
 
+    if (z.length > 0) {
+      const high = Math.max(...z);
+      const mid = Number(high/2);
+      document.getElementById('legendMiddle').textContent = mid;
+      document.getElementById('legendHigh').textContent = high;
+    }
+
     var data = [{
       type: 'choropleth',
+      locationmode: 'country names',
       colorscale: this.colorScales[season],
       showscale: false,
       reversescale: false,
@@ -52,7 +61,7 @@ export class Map {
       lon: [longitude],
       lat: [latitude],
       marker: {
-        size: 15,
+        size: 20,
         color: this.hostCityColor,
         line: {
           width: 1
@@ -98,7 +107,7 @@ export class Map {
 
   resize() {
     const w = this.mapDiv.parentNode.parentNode.parentNode.getBoundingClientRect().width;
-    const h = this.mapDiv.parentNode.parentNode.parentNode.getBoundingClientRect().height * 0.90;
+    const h = this.mapDiv.parentNode.parentNode.parentNode.getBoundingClientRect().height * 0.95;
     const update = { width: w, height: h };
 
     Plotly.relayout(this.mapDiv, update);

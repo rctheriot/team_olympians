@@ -11,6 +11,10 @@ import { Hosts } from './hosts';
 const mapDiv = document.getElementById('plotlyMap');
 const plotlyMap = new Map(mapDiv, 'robinson');
 
+// variables to update map
+let mapPlot = [];
+let hostPlot = [];
+
 // Databases Setup
 const database = new Database();
 const athleteCSV = require("./assets/csv/athlete_events.csv");
@@ -22,17 +26,23 @@ database.loadCSVIntoDatabase(countryCodes, 'countryCodes');
 const medalTableDiv = document.getElementById('medalTableDiv')
 const medalTable = new Table(medalTableDiv);
 
-// Title and Query Setup
-let year = '2016';
-let sex = 'Both';
-let sport = 'All';
-let season = 'Summer';
+// Query Setup
+let year;
+let selYearDiv;
+let sex;
+let selSexDiv;
+let sport;
+let selSportDiv;
+let season;
+let selSeasonDiv;
+let medal;
+let selMedalDiv;
 let query = {};
-const titleDiv = document.getElementById('title');
+
+let hostCity = {};
 
 function setQuery() {
   query = { Year: { lte: year, gte: (Number(year) - 2).toString() }, Sport: sport, Season: season, Sex: sex };
-  updateUIColor();
   if (sex == "Both") {
     delete query['Sex'];
   } else {
@@ -41,43 +51,52 @@ function setQuery() {
   if (sport == 'All') {
     delete query['Sport'];
   }
-  console.log(query);
-}
-
-function setTitle() {
-  if (titleDiv) {
-    titleDiv.innerText = `${year} ${season} Olympics - ${sex} ${sport}`;
-  }
-}
-
-window.yearChange = (selYear) => {
-  year = selYear;
-  setTitle();
-  setQuery();
-  startQuery();
-}
-
-window.genderChange = (selGender) => {
-  sex = selGender;
-  setTitle();
-  setQuery();
-  startQuery();
-}
-
-window.sportChange = (selSport) => {
-  sport = selSport;
-  setTitle();
-  setQuery();
-  startQuery();
-}
-
-window.seasonChange = (selSeason) => {
-  season = selSeason;
   updateUIColor();
-  setTitle();
+}
+
+window.seasonChange = (div) => {
+  season = div.value;
+  if (selSeasonDiv != undefined) selSeasonDiv.classList.remove('selected-button');
+  selSeasonDiv = div;
+  selSeasonDiv.classList.add('selected-button');
   setQuery();
+  setupSportList();
+  updateUIColor();
   plotlyMap.setSeason(season);
+}
+
+window.yearChange =  (div) => {
+  year = div.value;
+  if (selYearDiv != undefined) selYearDiv.classList.remove('selected-button');
+  selYearDiv = div;
+  selYearDiv.classList.add('selected-button');
+  setQuery();
+  setupSportList();
+}
+
+window.genderChange = (div) => {
+  sex = div.value;
+  if (selSexDiv != undefined) selSexDiv.classList.remove('selected-button');
+  selSexDiv = div;
+  selSexDiv.classList.add('selected-button');
+  setQuery();
+  setupSportList();
+}
+
+window.sportChange = (div) => {
+  sport = div.value;
+  if (selSportDiv != undefined) selSportDiv.classList.remove('selected-button');
+  selSportDiv = div;
+  selSportDiv.classList.add('selected-button');
+  setQuery();
   startQuery();
+}
+
+window.medalChange = (div) => {
+  medal = div.value;
+  if (selMedalDiv != undefined) selMedalDiv.classList.remove('selected-button');
+  selMedalDiv = div;
+  selMedalDiv.classList.add('selected-button');
 }
 
 window.changeSortSelection = (selSort) => {
@@ -86,6 +105,7 @@ window.changeSortSelection = (selSort) => {
 
 window.setMapProjectionType = (type) => {
   plotlyMap.setMapProjectionType(type);
+  plotlyMap.drawMap(mapPlot, season, medal, hostPlot['City'], hostPlot['Lat'], hostPlot['Long']);
 }
 
 window.onresize = () => {
@@ -93,7 +113,7 @@ window.onresize = () => {
 }
 
 function updateUIColor() {
-  const color = (season == 'Summer') ? 'rgb(163, 10, 26)' : 'rgb(10, 89, 128)';
+  const color = (season == 'Summer') ? 'rgb(123, 10, 26)' : 'rgb(10, 89, 128)';
   const elements = document.getElementsByClassName('pure-button pure-button-primary');
   for (let i = 0; i < elements.length; i++) {
     elements[i].style.background = color;
@@ -105,27 +125,6 @@ function updateUIColor() {
   document.getElementById('02/04button').textContent = (season == 'Summer') ? '2004' : '2002';
   document.getElementById('98/00button').textContent = (season == 'Summer') ? '1998' : '2000';
   document.getElementById('94/96button').textContent = (season == 'Summer') ? '1994' : '1996';
-}
-
-function createAthleteDataRow(athleteInfo, countryInfo) {
-  return {
-    name: athleteInfo['Name'],
-    sex: athleteInfo['Sex'],
-    age: athleteInfo['Age'],
-    height: athleteInfo['Height'],
-    weight: athleteInfo['Weight'],
-    country: countryInfo['Name'],
-    events: [],
-  }
-}
-
-function createAthleteEventInfo(athleteInfo) {
-  return {
-    event: athleteInfo['Event'],
-    sport: athleteInfo['Sport'],
-    medal: athleteInfo['Medal'],
-    year: athleteInfo['Year']
-  }
 }
 
 function createCountryDataRow(countryInfo) {
@@ -144,15 +143,13 @@ function createCountryDataRow(countryInfo) {
 const BreakException = {};
 
 function startQuery() {
-  let athleteData = {};
+  if (year == undefined || sex == undefined || season == undefined || sport == undefined || medal == undefined) return;
   let countryData = {};
   let fixYear = false;
-  let hostCity = {};
-
   database.queryDatabase('athletes', query).forEach(athleteInfo => {
-    if (!fixYear) { 
-      year = athleteInfo['Year']; 
-      setTitle(); fixYear = true; 
+    if (!fixYear) {
+      year = athleteInfo['Year'];
+      fixYear = true;
       hostCity = Hosts.find(host => (host.Year.toString() == athleteInfo['Year'] && host.Season.toString() == athleteInfo['Season']))
     }
     try {
@@ -167,67 +164,83 @@ function startQuery() {
       countryData[countryName]['total'].push(athleteInfo['Event']);
       countryData[countryName][athleteInfo['Medal'].toLowerCase()].push(athleteInfo['Event']);
 
-      // Athelete CSV: "ID","Name","Sex","Age","Height","Weight","Team","NOC","Games","Year","Season","City","Sport","Event","Medal"
-      // AthleteID From the CSV
-      const athleteId = athleteInfo['ID'];
-      // Does the Athlete Exist Yet?
-      if (!athleteData[athleteId]) { athleteData[athleteId] = createAthleteDataRow(athleteInfo, countryInfo); }
-      //Add this Event to the athlete's event array
-      athleteData[athleteId].events.push(createAthleteEventInfo(athleteInfo));
-
     } catch (e) {
       if (e !== BreakException) throw e;
     }
   });
-  // medalTable.updateTableData(tableArray);
-  console.log(countryData);
-  console.log(athleteData);
 
   const mapData = [];
-  const nataionData= [];
   Object.keys(countryData).forEach(country => {
     countryData[country]['gold'] = [...new Set(countryData[country]['gold'])].length;
     countryData[country]['silver'] = [...new Set(countryData[country]['silver'])].length;
     countryData[country]['bronze'] = [...new Set(countryData[country]['bronze'])].length;
     countryData[country]['na'] = [...new Set(countryData[country]['na'])].length;
     countryData[country]['total'] = countryData[country]['gold'] + countryData[country]['silver'] + countryData[country]['bronze'];
-    mapData.push(countryData[country]) 
-    countryData[country]['code']
+    countryData[country]['code'];
+    mapData.push(countryData[country]);
   })
 
-  //LoadImages(mapData);
+  mapPlot = mapData;
+  hostPlot = hostCity;
   setPodium(mapData);
+  console.log(mapData);
 
-  plotlyMap.drawMap(mapData, season, hostCity['City'], hostCity['Lat'], hostCity['Long']);
+  plotlyMap.drawMap(mapData, season, medal, hostCity['City'], hostCity['Lat'], hostCity['Long']);
 }
-
-setTimeout(() => {
-  setQuery();
-  setTitle();
-  startQuery();
-}, 2000);
 
 function setPodium(data) {
-  data.sort(function(a, b) {
-    var keyA = a['total'];
-    var keyB = b['total'];
-    return keyB - keyA; 
+  data.sort(function (a, b) {
+    var keyA = a[medal];
+    var keyB = b[medal];
+    return keyB - keyA;
   });
-  console.log(data[0]);
-  console.log(data[1]);
-  console.log(data[2]);
-  //document.getElementById('firstnation').src = "./assets/flags-normal/" + data[0]['code'].toLowerCase() + ".png";
+  document.getElementById('firstnation').src = "https://jkbishay.github.io/images/flags-normal/" + data[0]['code'].toLowerCase() + ".png";
+  document.getElementById('secondnation').src = "https://jkbishay.github.io/images/flags-normal/" + data[1]['code'].toLowerCase() + ".png";
+  document.getElementById('thirdnation').src = "https://jkbishay.github.io/images/flags-normal/" + data[2]['code'].toLowerCase() + ".png";
+  document.getElementById('firstText').innerText = data[0][medal];
+  document.getElementById('secondText').innerText = data[1][medal];
+  document.getElementById('thirdText').innerText = data[2][medal];
 }
 
-function LoadImages(reference) {
-  reference.forEach(element => {
-    var image = new Image();
-    image.src = './assets/flags-normal/' + element['code'].toLowerCase() + '.png';
-    image.onload = function() { imagecallback(); };
-
+function setupSportList() {
+  if (year == undefined || sex == undefined || season == undefined) return;
+  const q = query;
+  console.log(q);
+  delete q['Sport'];
+  const sportList = [];
+  database.queryDatabase('athletes', q).forEach(el => {
+    if (sportList.indexOf(el['Sport']) == -1) {
+      sportList.push(el['Sport']);
+    }
   });
-}
 
-function imagecallback() {
-  return;
+  const sportListDiv = document.getElementById('sport-list');
+  while (sportListDiv.firstChild) {
+    sportListDiv.removeChild(sportListDiv.firstChild);
+  }
+  const color = (season == 'Summer') ? 'rgb(123, 10, 26)' : 'rgb(10, 89, 128)';
+
+  const elements = [];
+  const allButton = document.createElement("button");
+  allButton.classList.add('pure-button');
+  allButton.classList.add('pure-button-primary');
+  allButton.value = 'All';
+  allButton.innerText = 'All Events';
+  allButton.style.background = color;
+  allButton.onclick = function (allButton) { window.sportChange(this) };
+  elements.push(allButton);
+  sportList.sort();
+  sportList.forEach(el => {
+    const element = document.createElement("button");
+    element.classList.add('pure-button');
+    element.classList.add('pure-button-primary');
+    element.value = el;
+    element.innerText = el; 
+    element.style.background = color;
+    element.onclick = function (element) { window.sportChange(this) };
+    elements.push(element);
+  })
+  sportListDiv.append(...elements);
+
+
 }

@@ -12,6 +12,22 @@
 #plotlyMap > div > div > svg:nth-child(1) > g.geolayer > g > g.layer.frame > path {
     stroke: white !important;
     stroke-width: 6px !important;
+    
+}
+
+
+#plotlyLegend > div > div > svg:nth-child(1) > g.geolayer > g > g.layer.bg > rect {
+    fill: rgba(40,40,40, 1.0) !important;
+}
+
+#plotlyLegend > div > div > svg:nth-child(1) > g.geolayer > g > g.layer.coastlines > path {
+    stroke: white !important;
+    stroke-width: 2.5px !important;
+}
+
+#plotlyLegend > div > div > svg:nth-child(1) > g.geolayer > g > g.layer.frame > path {
+    stroke: white !important;
+    stroke-width: 6px !important;
 }
 
 #colorLegend {
@@ -25,4 +41,6 @@
     border-color: white;
     margin: 0px;
     padding: 0px;
+    box-shadow: 4px 5px 8px 0 rgba(0, 0, 0, 0.25), 5px 10px 30px 0 rgba(0, 0, 0, 0.65);
+    border-radius: 10px;
 }
