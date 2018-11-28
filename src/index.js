@@ -26,6 +26,9 @@ database.loadCSVIntoDatabase(countryCodes, 'countryCodes');
 const medalTableDiv = document.getElementById('medalTableDiv')
 const medalTable = new Table(medalTableDiv);
 
+// Hide Podium
+hidePodium();
+
 // Query Setup
 let year;
 let selYearDiv;
@@ -188,18 +191,36 @@ function startQuery() {
   plotlyMap.drawMap(mapData, season, medal, hostCity['City'], hostCity['Lat'], hostCity['Long']);
 }
 
+function hidePodium() {
+  document.getElementById("right-toolbar").style.display = "none";
+}
+
+function showPodium() {
+  document.getElementById("right-toolbar").style.display = "block";
+}
+
 function setPodium(data) {
-  data.sort(function (a, b) {
-    var keyA = a[medal];
-    var keyB = b[medal];
-    return keyB - keyA;
-  });
-  document.getElementById('firstnation').src = "https://jkbishay.github.io/images/flags-normal/" + data[0]['code'].toLowerCase() + ".png";
-  document.getElementById('secondnation').src = "https://jkbishay.github.io/images/flags-normal/" + data[1]['code'].toLowerCase() + ".png";
-  document.getElementById('thirdnation').src = "https://jkbishay.github.io/images/flags-normal/" + data[2]['code'].toLowerCase() + ".png";
-  document.getElementById('firstText').innerText = data[0][medal];
-  document.getElementById('secondText').innerText = data[1][medal];
-  document.getElementById('thirdText').innerText = data[2][medal];
+  if (!data) {
+    hidePodium();
+  }
+  else {
+    showPodium();
+    
+    data.sort(function (a, b) {
+      var keyA = a[medal];
+      var keyB = b[medal];
+      return keyB - keyA;
+    });
+    document.getElementById('firstnation').src = "https://jkbishay.github.io/images/flags-normal/" + data[0]['code'].toLowerCase() + ".png";
+    document.getElementById('secondnation').src = "https://jkbishay.github.io/images/flags-normal/" + data[1]['code'].toLowerCase() + ".png";
+    document.getElementById('thirdnation').src = "https://jkbishay.github.io/images/flags-normal/" + data[2]['code'].toLowerCase() + ".png";
+    document.getElementById('firstText').innerText = data[0][medal];
+    document.getElementById('secondText').innerText = data[1][medal];
+    document.getElementById('thirdText').innerText = data[2][medal];
+    document.getElementById('firstname').innerText = data[0]['name'];
+    document.getElementById('secondname').innerText = data[1]['name'];
+    document.getElementById('thirdname').innerText = data[2]['name'];
+  }
 }
 
 function setupSportList() {
