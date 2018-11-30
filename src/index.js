@@ -126,8 +126,8 @@ function updateUIColor() {
   document.getElementById('10/12button').textContent = (season == 'Summer') ? '2012' : '2010';
   document.getElementById('06/08button').textContent = (season == 'Summer') ? '2008' : '2006';
   document.getElementById('02/04button').textContent = (season == 'Summer') ? '2004' : '2002';
-  document.getElementById('98/00button').textContent = (season == 'Summer') ? '1998' : '2000';
-  document.getElementById('94/96button').textContent = (season == 'Summer') ? '1994' : '1996';
+  document.getElementById('98/00button').textContent = (season == 'Summer') ? '2000' : '1998';
+  document.getElementById('94/96button').textContent = (season == 'Summer') ? '1996' : '1994';
 }
 
 function createCountryDataRow(countryInfo) {
@@ -189,6 +189,7 @@ function startQuery() {
   console.log(mapData);
 
   plotlyMap.drawMap(mapData, season, medal, hostCity['City'], hostCity['Lat'], hostCity['Long']);
+  document.getElementById('olympicheader').innerText = year + " " + season + " Olympics\r\n" + hostPlot['City'] + ", " + hostPlot['Country'];
 }
 
 function hidePodium() {
