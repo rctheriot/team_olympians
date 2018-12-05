@@ -21,7 +21,7 @@ export class Chart {
             name: 'Gold',
             line: {
               color: 'rgb(255,223,0)',
-              width: 1
+              width: 2
             }
         }
         var trace2 = {
@@ -31,7 +31,7 @@ export class Chart {
             name: 'Silver',
             line: {
               color: 'rgb(192,192,192)',
-              width: 1
+              width: 2
             }
         }
         var trace3 = {
@@ -41,7 +41,7 @@ export class Chart {
             name: 'Bronze',
             line: {
               color: 'rgb(205, 127, 50)',
-              width: 1
+              width: 2
             }
         }
         
