@@ -64,7 +64,8 @@ export class Map {
         size: 20,
         color: this.hostCityColor,
         line: {
-          width: 1
+          width: 2,
+          color:'rgb(0,0,0)',
         }
       },
       name: hostName
