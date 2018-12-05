@@ -6,10 +6,17 @@ import { Map } from './components/map/map.js';
 import { Database } from './components/database/database';
 import { Table } from './components/table/table';
 import { Hosts } from './hosts';
+import { Chart } from "./components/charts/charts";
+
 
 // Map Setup
 const mapDiv = document.getElementById('plotlyMap');
 const plotlyMap = new Map(mapDiv, 'robinson');
+
+//ChartSetup 
+
+const chartDiv = document.getElementById('detailsDiv');
+const chart = new Chart(chartDiv, " ");
 
 // variables to update map
 let mapPlot = [];
@@ -41,6 +48,7 @@ let selSeasonDiv;
 let medal;
 let selMedalDiv;
 let query = {};
+var topCountries;
 
 let hostCity = {};
 
@@ -68,7 +76,7 @@ window.seasonChange = (div) => {
   plotlyMap.setSeason(season);
 }
 
-window.yearChange =  (div) => {
+window.yearChange = (div) => {
   year = div.value;
   if (selYearDiv != undefined) selYearDiv.classList.remove('selected-button');
   selYearDiv = div;
@@ -102,6 +110,8 @@ window.medalChange = (div) => {
   selMedalDiv.classList.add('selected-button');
 }
 
+
+
 window.changeSortSelection = (selSort) => {
   medalTable.changeSortSelection(selSort);
 }
@@ -114,6 +124,41 @@ window.setMapProjectionType = (type) => {
 window.onresize = () => {
   plotlyMap.resize();
 }
+
+
+window.CreateHistoryChart = (countryIndex) =>{
+  var currentCountry = topCountries[countryIndex];
+  CreateCharts(currentCountry);
+  document.getElementById("detailsDiv").style.display = "block";
+  document.getElementById('detailsDiv').style.opacity = 1; 
+}
+
+
+window.fadeOutEffect = (id) => {
+  var fadeTarget = document.getElementById(id);
+  var fadeEffect = setInterval(function () {
+    if (!fadeTarget.style.opacity) {
+      fadeTarget.style.opacity = 1;
+    }
+    if (fadeTarget.style.opacity > 0) {
+      fadeTarget.style.opacity -= 0.09;
+    }
+    else {
+      clearInterval(fadeEffect);
+      document.getElementById(id).style.display = "none";
+    }
+  }, 80);
+
+}
+
+
+
+
+window.closeDiv = () => {
+  window.fadeOutEffect("detailsDiv");
+ // document.getElementById("detailsDiv").style.display = "none";
+}
+
 
 function updateUIColor() {
   const color = (season == 'Summer') ? 'rgb(123, 10, 26)' : 'rgb(10, 89, 128)';
@@ -145,7 +190,12 @@ function createCountryDataRow(countryInfo) {
 
 const BreakException = {};
 
+
+
+
+
 function startQuery() {
+
   if (year == undefined || sex == undefined || season == undefined || sport == undefined || medal == undefined) return;
   let countryData = {};
   let fixYear = false;
@@ -186,10 +236,78 @@ function startQuery() {
   mapPlot = mapData;
   hostPlot = hostCity;
   setPodium(mapData);
-  console.log(mapData);
 
   plotlyMap.drawMap(mapData, season, medal, hostCity['City'], hostCity['Lat'], hostCity['Long']);
   document.getElementById('olympicheader').innerText = year + " " + season + " Olympics\r\n" + hostPlot['City'] + ", " + hostPlot['Country'];
+  //Create Chart From mapData
+  //Set top countries for charts.(Optimize)
+  topCountries = [];
+  var count = 0;
+  while (topCountries.length <= 2) {
+    topCountries.push(mapData[count]);
+    count++;
+  }
+
+
+
+}
+function GetListOfYears() {
+  var years = [];
+  var yearsDiv = document.getElementById("btnsYears");
+  var btns = yearsDiv.getElementsByTagName("button");
+  for (var i = 0; i < btns.length; i++) {
+    years.push(btns[i].innerText);
+  }
+  return years;
+
+}
+
+function CreateCharts(country) {
+  var traces = [];
+  var years = GetListOfYears();
+  var goldMedals = [];
+  var silverMedals = [];
+  var bronzeMedals = [];
+  var participants = [];
+
+
+  years.forEach(year => {
+    let _query = { Year: year, Sport: sport, NOC: country.noc };
+    if(sport == "All"){
+      delete _query['Sport'];
+    }
+    let _result = database.queryDatabase('athletes', _query);
+
+    participants.push(_result.length);
+    var medalCount = [0, 0, 0];
+    for (var i = 0; i < _result.length; i++) {
+      if (_result[i].Medal == "Gold") {
+        medalCount[0] = medalCount[0] + 1;
+      } else if (_result[i].Medal == "Silver") {
+        medalCount[1] = medalCount[1] + 1;
+      } else if (_result[i].Medal == "Bronze") {
+        medalCount[2] = medalCount[2] + 1;
+      }
+
+    }
+    goldMedals.push(medalCount[0]);
+    silverMedals.push(medalCount[1]);
+    bronzeMedals.push(medalCount[2]);
+
+  });
+  //traces.push(participants);
+  traces[0] = goldMedals;
+  traces[1] = silverMedals;
+  traces[2] = bronzeMedals;
+
+
+  GetListOfYears().forEach(element => {
+    let q = { Year: element, Sport: sport, NOC: topCountries[0].noc };
+    var result = database.queryDatabase('athletes', q);
+  });
+
+  chart.plotData(years, traces,country.name,sport);
+
 }
 
 function hidePodium() {
@@ -206,7 +324,7 @@ function setPodium(data) {
   }
   else {
     showPodium();
-    
+
     data.sort(function (a, b) {
       var keyA = a[medal];
       var keyB = b[medal];
@@ -257,7 +375,7 @@ function setupSportList() {
     element.classList.add('pure-button');
     element.classList.add('pure-button-primary');
     element.value = el;
-    element.innerText = el; 
+    element.innerText = el;
     element.style.background = color;
     element.onclick = function (element) { window.sportChange(this) };
     elements.push(element);
